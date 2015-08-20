@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	template="../templates/default.xhtml">
+	<ui:define name="content">
+	
+		<h:head>			
+			<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
+			<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
+			<!-- Include Date Range Picker -->
+			<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"/>
+			<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+		</h:head>
+		
+		<style type="text/css">			
+			.input-mini {
+				width: 100% !important;			
+			}		
+		</style>
+	
+		<h:form>
+			<div class="portlet box blue">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> Critérios de Busca
+					</div>
+					<div class="tools">
+						<a class="collapse" href=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body">
+						
+					<sec:authorize access="hasAnyRole('ROLE_SECRETARIADO')">
+					
+						<!-- Habilitado somente para usuarios com perfil de Secretariado do diretório acadêmico -->				
+											
+						<h4>Curso:</h4>
+						<h:selectOneMenu value="#{indexMB.cursoSelecionado}"
+							styleClass="form-control">
+							<f:selectItem itemValue="#{null}"
+								itemLabel="-- Selecione o curso --" />
+							<f:selectItems value="#{indexMB.cursosDisponiveis}" />
+						</h:selectOneMenu>	
+						<br />
+						
+					</sec:authorize>
+
+					<h4>Disciplina:</h4>
+					<h:selectOneMenu value="#{indexMB.disciplinaSelecionada}"
+						styleClass="form-control">
+						<f:selectItem itemValue="#{null}"
+							itemLabel="-- Selecione a Disciplina --" />
+						<f:selectItems value="#{indexMB.disciplinasDisponiveis}" />
+					</h:selectOneMenu>
+					<br />
+
+					<sec:authorize access="hasAnyRole('ROLE_SECRETARIADO','ROLE_COORDENADOR')">
+						
+						<!-- Habilitado para: Secretária do diretório acadêmico, Coordenador -->
+						
+						<h4>Matricula do Aluno:</h4>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon2"><span
+								class="glyphicon glyphicon-file"></span></span>
+							<h:inputText styleClass="form-control"></h:inputText>
+						</div>
+						<br />
+					
+					</sec:authorize>
+					
+					<h4>Consulta por periodo:</h4>
+					<h:inputText id="daterange" name="daterange" value="01/01/2015 - 01/31/2015" styleClass="form-control" onfocus="showCalendar(this);"/>
+					<script type="text/javascript">
+						function showCalendar(o){						
+							$('input[name="'+o.id+'"]').daterangepicker();
+						}						
+					</script>
+
+					<br />
+					<h:commandButton id="submit" value="Pesquisar" type="submit"
+						action="#{indexMB.pesquisar}"
+						styleClass="btn btn-primary btn-block" />
+
+				</div>
+			</div>
+			<div class="portlet box blue">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> Resultado da Consulta
+					</div>
+					<div class="tools">
+						<a class="collapse" href=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<h:dataTable id="result" styleClass="table table-striped table-bordered" value="#{indexMB.resultNotas}" var="o" >
+						<h:column>
+							<f:facet name="header">Aluno</f:facet>
+							#{o.nomeAluno}
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Curso</f:facet>
+							#{o.curso}
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Disciplina</f:facet>
+							#{o.disciplina}
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Periodo</f:facet>
+							#{o.periodo}
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">Nota</f:facet>
+							#{o.nota}
+						</h:column>
+
+					</h:dataTable>
+				</div>
+			</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

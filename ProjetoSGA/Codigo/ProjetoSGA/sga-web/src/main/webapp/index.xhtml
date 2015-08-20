@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<div class="portlet box blue">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> Critérios de Busca
+					</div>
+					<div class="tools">
+						<a class="collapse" href=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body">
+
+					<!-- Habilitado para: Secretária do diretório acadêmico -->
+					<h4>Curso:</h4>
+					<h:selectOneMenu value="#{indexMB.selectedItem}"
+						styleClass="form-control">
+						<f:selectItem itemValue="#{null}"
+							itemLabel="-- Selecione o curso --" />
+						<f:selectItems value="#{indexMB.availableItems}" />
+					</h:selectOneMenu>
+
+					<br />
+
+					<!-- Habilitar para: Secretária do diretório acadêmico, Aluno, Coordenador-->
+					<h4>Disciplina:</h4>
+					<h:selectOneMenu value="#{indexMB.selectedItem}"
+						styleClass="form-control">
+						<f:selectItem itemValue="#{null}"
+							itemLabel="-- Selecione a Disciplina --" />
+						<f:selectItems value="#{indexMB.availableItems}" />
+					</h:selectOneMenu>
+
+					<br />
+
+					<!-- Habilitado para: Secretária do diretório acadêmico, Aluno, Coordenador- -->
+					<h4>Matricula do Aluno:</h4>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon2"><span
+							class="glyphicon glyphicon-file"></span></span>
+						<h:inputText styleClass="form-control"></h:inputText>
+					</div>
+
+					<br />
+
+					<!-- Habilitar para: Secretária do diretório acadêmico,Aluno, Coordenador-->
+					<h4>Consulta por periodo:</h4>
+					<h:inputText id="daterange" name="daterange"
+						value="01/01/2015 - 01/31/2015" styleClass="form-control" />
+					<script type="text/javascript">
+						$(function() {
+							$('input[name="daterange"]').daterangepicker();
+						});
+					</script>
+
+					<br />
+					<h:commandButton id="submit" value="Pesquisar" type="submit"
+						action="#{indexMB.pesquisar}"
+						styleClass="btn btn-primary btn-block" />
+
+				</div>
+			</div>
+			<div class="portlet box blue">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-reorder"></i> Resultado da Consulta
+					</div>
+					<div class="tools">
+						<a class="collapse" href=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<h:dataTable id="result"
+						styleClass="table table-striped table-bordered" value=#{indexMB.alunoDisciplina} var="o">
+
+						<h:column>
+							<f:facet name="header">Aluno</f:facet>
+							#{o.aluno.nome}
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">Nota</f:facet>
+							#{o.nota}
+						</h:column>
+
+					</h:dataTable>
+				</div>
+			</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
